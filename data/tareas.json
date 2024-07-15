@@ -1,0 +1,23 @@
+[
+    {
+        "descripcion": "Repasar clases curso JS",
+        "date": "2024-07-20",
+        "hour": "18:00",
+        "realizada": false,
+        "ciudad": "Buenos Aires"
+    },
+    {
+        "descripcion": "Ir al supermercado",
+        "date": "2024-07-18",
+        "hour": "10:00",
+        "realizada": false,
+        "ciudad": "Canada de Gomez"
+    },
+    {
+        "descripcion": "Turno al médico",
+        "date": "2024-07-22",
+        "hour": "15:00",
+        "realizada": false,
+        "ciudad": "Totoras"
+    }
+]
