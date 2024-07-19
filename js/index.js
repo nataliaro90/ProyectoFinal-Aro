@@ -1,3 +1,69 @@
+const registrarUsuario = () => {
+    const username = document.getElementById("username").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
+    const registrationError = document.getElementById("registrationError");
+
+    if (!username || !email || !password) {
+        registrationError.textContent = "Por favor, complete todos los campos.";
+        return;
+    }
+
+    registrationError.style.display = "none";
+    localStorage.setItem("username", username);
+    localStorage.setItem("email", email);
+    localStorage.setItem("password", password);
+    mostrarMensajeBienvenida(username);
+    document.getElementById("mainContent").style.display = "block";
+}
+
+const mostrarFormularioRegistro = () => {
+    document.getElementById("registrationForm").style.display = "block";
+    document.getElementById("mainContent").style.display = "none";
+}
+
+const mostrarMensajeBienvenida = (username) => {
+    document.getElementById("registrationForm").style.display = "none";
+    document.getElementById("welcomeMessage").style.display = "block";
+    document.getElementById("welcomeText").textContent = `Bienvenido, ${username}!`;
+}
+
+const iniciarSesion = () => {
+    const storedUsername = localStorage.getItem("username");
+    if (storedUsername) {
+        mostrarMensajeBienvenida(storedUsername);
+        document.getElementById("mainContent").style.display = "block";
+    } else {
+        mostrarFormularioRegistro();
+    }
+}
+
+const obtenerClima = async (ciudad) => {
+    try {
+        const apiKey = '3d2c972681d840d0316df7fc761c80d7';
+        const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${ciudad}&appid=${apiKey}&units=metric`;
+
+        if (!ciudad) {
+            throw new Error('Ciudad no especificada.');
+        }
+
+        const response = await fetch(apiUrl);
+        if (!response.ok) {
+            if (response.status === 404) {
+                throw new Error('Ciudad no encontrada.');
+            } else {
+                throw new Error('No se pudo obtener el clima.');
+            }
+        }
+
+        const data = await response.json();
+        return data.main.temp;
+    } catch (error) {
+        console.error('Error obteniendo el clima:', error);
+        return null;
+    }
+}
+
 class Tarea {
     constructor(descripcion, date, hour, ciudad) {
         this.descripcion = descripcion;
@@ -77,6 +143,12 @@ const marcarRealizada = (index) => {
     Tareas[index].realizada = true;
     guardarTareas();
     mostrarTareas();
+    Swal.fire({
+        icon: 'success',
+        title: 'Tarea marcada como realizada',
+        showConfirmButton: false,
+        timer: 1500
+    });
 }
 
 const eliminarTarea = (index) => {
@@ -91,37 +163,11 @@ const eliminarTarea = (index) => {
     });
 }
 
+document.getElementById("registerButton").addEventListener("click", registrarUsuario);
 document.getElementById("addTaskButton").addEventListener("click", () => {
     document.getElementById("taskForm").style.display = "block";
 });
-
 document.getElementById("saveTaskButton").addEventListener("click", agregarTarea);
-
-const obtenerClima = async (ciudad) => {
-    try {
-        const apiKey = '3d2c972681d840d0316df7fc761c80d7';
-        const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${ciudad}&appid=${apiKey}&units=metric`;
-        
-        if (!ciudad) {
-            throw new Error('Ciudad no especificada.');
-        }
-        
-        const response = await fetch(apiUrl);
-        if (!response.ok) {
-            if (response.status === 404) {
-                throw new Error('Ciudad no encontrada.');
-            } else {
-                throw new Error('No se pudo obtener el clima.');
-            }
-        }
-        
-        const data = await response.json();
-        return data.main.temp;
-    } catch (error) {
-        console.error('Error obteniendo el clima:', error);
-        return null;
-    }
-}
 
 const cargarDatos = async () => {
     try {
@@ -141,6 +187,7 @@ const cargarDatos = async () => {
             guardarTareas();
         }
         
+        iniciarSesion();
         mostrarTareas();
     } catch (error) {
         console.error('Error cargando datos:', error);

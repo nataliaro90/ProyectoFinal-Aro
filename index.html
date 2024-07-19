@@ -8,14 +8,28 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 </head>
+
 <body>
-    <div class="container">
-        <h1 class="title">Remember Me -Agenda</h1>
-        
+    <div id="registrationForm" class="container" style="display: none;">
+        <h1 class="title">Registro de Usuario</h1>
+        <form id="registerForm" class="form">
+            <input type="text" id="username" class="input" placeholder="Nombre de usuario">
+            <input type="email" id="email" class="input" placeholder="Correo electrónico">
+            <input type="password" id="password" class="input" placeholder="Contraseña">
+            <button type="button" id="registerButton" class="button">Registrar</button>
+            <p id="registrationError" class="error-message" style="display: none;"></p>
+        </form>
+    </div>
+
+    <div id="welcomeMessage" class="container" style="display: none;">
+        <h1 class="title" id="welcomeText"></h1>
+    </div>
+
+    <div id="mainContent" class="container" style="display: none;">
+        <h1 class="title">Remember Me - Agenda</h1>
         <div class="button-container">
             <button id="addTaskButton" class="button">Agregar Tarea</button>
         </div>
-        
         <form id="taskForm" class="form" style="display: none;">
             <input type="text" id="taskDescription" class="input" placeholder="Descripción de la tarea">
             <input type="date" id="taskDate" class="input">
@@ -23,12 +37,8 @@
             <input type="text" id="taskCity" class="input" placeholder="Ciudad para el clima">
             <button type="button" id="saveTaskButton" class="button">Guardar Tarea</button>
         </form>
-        
-        <p id="errorMessage" class="error-message"></p>
-        
-        <ul id="taskList" class="list">
-
-        </ul>
+        <p id="errorMessage" class="error-message" style="display: none;"></p>
+        <ul id="taskList" class="list"></ul>
     </div>
 
     <script src="./js/index.js"></script>
