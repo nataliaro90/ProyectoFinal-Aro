@@ -125,16 +125,22 @@ const obtenerClima = async (ciudad) => {
 
 const cargarDatos = async () => {
     try {
-        const response = await fetch('./data/tareas.json');
-        const data = await response.json();
-        
-        Tareas = data.map(tarea => new Tarea(tarea.descripcion, tarea.date, tarea.hour, tarea.ciudad));
-        
-        await Promise.all(Tareas.map(async tarea => {
-            tarea.clima = await obtenerClima(tarea.ciudad);
-        }));
+        const storedTareas = localStorage.getItem("tareas");
+        if (storedTareas) {
+            Tareas = JSON.parse(storedTareas);
+        } else {
+            const response = await fetch('./data/tareas.json');
+            const data = await response.json();
+            
+            Tareas = data.map(tarea => new Tarea(tarea.descripcion, tarea.date, tarea.hour, tarea.ciudad));
+            
+            await Promise.all(Tareas.map(async tarea => {
+                tarea.clima = await obtenerClima(tarea.ciudad);
+            }));
 
-        guardarTareas();
+            guardarTareas();
+        }
+        
         mostrarTareas();
     } catch (error) {
         console.error('Error cargando datos:', error);
